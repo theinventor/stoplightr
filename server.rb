@@ -56,15 +56,15 @@ get '/yellow/off' do
   YELLOW.off
 end
 
+get '/countdown' do
+  countdown
+end
+
 def flash_all
   5.times do
-    RED.on
-    YELLOW.on
-    GREEN.on
+    all_on
     sleep 0.1
-    RED.off
-    YELLOW.off
-    GREEN.off
+    all_off
     sleep 0.1
   end
 end
@@ -86,5 +86,56 @@ def go_green
   YELLOW.off
   RED.off
 end
+
+def countdown
+  RED.on
+  YELLOW.off
+  GREEN.off
+  sleep 1
+  RED.off
+  YELLOW.on
+  sleep 1
+  YELLOW.off
+  GREEN.on
+end
+
+def knock_knock
+  all_off
+  RED.on
+  sleep 0.3
+  RED.off
+  sleep 0.05
+  RED.on
+  sleep 0.2
+  RED.off
+  sleep 0.05
+  RED.on
+  sleep 0.1
+  RED.off
+  sleep 0.05
+  YELLOW.on
+  sleep 0.75
+  YELLOW.off
+  sleep 0.1
+  YELLOW.on
+  sleep 0.3
+  GREEN.on
+  sleep 3
+  all_off
+end
+
+def all_on
+  GREEN.on
+  YELLOW.on
+  RED.on
+end
+
+def all_off
+  GREEN.off
+  YELLOW.off
+  RED.off
+end
+
+
 
 
