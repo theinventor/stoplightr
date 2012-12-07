@@ -1,0 +1,51 @@
+%html
+  %head
+    %script{src: '//js.pusher.com/1.12/pusher.min.js'}
+    %script{src: '/js/jquery.js'}
+    %script{src: '/js/jquery-ui.js'}
+    %link{href: '//fonts.googleapis.com/css?family=Stalinist+One', rel: 'stylesheet', type: 'text/css'}
+    %link{href: '/css/bootstrap.css', rel: 'stylesheet', type: 'text/css'}
+    %link{href: '/css/style.css', rel: 'stylesheet', type: 'text/css'}
+
+  %body
+    .row-fluid.game-off{style: "display: block; margin-top: 100px"}
+      #launch-button.button.green.hero-unit.span10.offset1
+        %h1.bold Lights!
+    .row-fluid
+      #count.hero-unit.span10.offset1
+
+
+  :javascript
+    var pusher = new Pusher('cd4495f3cd38cad1395a');
+    var channel = pusher.subscribe('cannon');
+
+    function startCountDown(e, fire) {
+      var fire = fire || true
+      $.post('/launching');
+      var $that = $('#launch-button');
+      var count = 3;
+
+      $('#count').text(count);
+
+      $that.off('click');
+      $that.removeClass('green').addClass('yellow');
+
+      (function counter () {
+        setTimeout(function() {
+          if (count == 0) {
+            $that.removeClass('yellow').addClass('green').click(startCountDown);
+            $('#count').text('');
+            if (fire)
+              $.post('/fire', {api: 'some_secret'})
+          } else {
+            $('#count').text(--count);
+            counter();
+          }
+        }, 1000);
+      })();
+    }
+    $('#launch-button').click(startCountDown);
+    channel.bind('launching', function(data) {
+      $('#launch-button').trigger('click', false);
+    });
+
